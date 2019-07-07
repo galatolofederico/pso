@@ -20,7 +20,7 @@ show_help(){
 }
 
 exec_cmd(){
-    exec_cmd=$(printf "$cmd" "$resource")
+    exec_cmd=$(printf "$1" "$2")
     eval $exec_cmd
     kill -s TERM $TOP_PID
 }
