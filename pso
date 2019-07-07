@@ -3,9 +3,8 @@
 trap "exit 0" TERM
 export TOP_PID=$$
 
-CONFIG_FILE="$HOME/.config/pso.config"
-[ -f "$CONFIG_FILE" ] && . "$CONFIG_FILE"
-
+[ -z "$PSO_CONFIG_FILE" ] && PSO_CONFIG_FILE="$HOME/.config/pso.config"
+. "$PSO_CONFIG_FILE"
 
 show_help(){
     echo "Pretty Straightforward file Opener"
