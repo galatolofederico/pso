@@ -1,12 +1,11 @@
 #!/bin/sh
 
-if [ -z "$PSO_MIME_CONFIG" ]; then 
-    PSO_MIME_CONFIG="$HOME/.config/pso.mime.config"
-fi
 
-if [ -z "$PSO_REGEX_CONFIG" ]; then 
-    PSO_REGEX_CONFIG="$HOME/.config/pso.regex.config"
-fi
+[ -z "$PSO_REGEX_CONFIG" ] && PSO_REGEX_CONFIG="$HOME/.config/pso.regex.config"
+[ -z "$PSO_MIME_CONFIG" ] && PSO_MIME_CONFIG="$HOME/.config/pso.mime.config"
+[ -z "$PSO_URI_CONFIG" ] && PSO_URI_CONFIG="$HOME/.config/pso.uri.config"
+
+
 
 show_help(){
     echo "Pretty Straightforward file Opener"
@@ -15,14 +14,17 @@ show_help(){
     echo "-d : Run in debug mode (dry run)"
 }
 
+exec_cmd(){
+    cmd=$(printf "$app" "$resource")
+    exec $cmd
+    opened=1 
+}
 
 try_config(){
     while IFS=: read -r mime app; do
     if [ "$mime" = "$resource_mime" ]; then
         if [ "$opened" -eq 0 ] && [ "$debug" -eq 0 ]; then
-            cmd=$(printf "$app" "$resource")
-            exec "$cmd"
-            opened=1 
+            exec_cmd "$app" "$resource"
         fi
         [ "$debug" -eq 1 ] && echo "mime: $mime app: $app (from $PSO_MIME_CONFIG)"
     fi
