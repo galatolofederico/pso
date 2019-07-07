@@ -4,12 +4,7 @@ trap "exit 0" TERM
 export TOP_PID=$$
 
 CONFIG_FILE="$HOME/.config/pso.config"
-
 [ -f "$CONFIG_FILE" ] && . "$CONFIG_FILE"
-
-[ -z "$PSO_REGEX_CONFIG" ] && PSO_REGEX_CONFIG="$HOME/.config/pso.regex.config"
-[ -z "$PSO_MIME_CONFIG" ] && PSO_MIME_CONFIG="$HOME/.config/pso.mime.config"
-[ -z "$PSO_URI_CONFIG" ] && PSO_URI_CONFIG="$HOME/.config/pso.uri.config"
 
 
 show_help(){
@@ -53,9 +48,9 @@ try_mime(){
 
 
 ask(){
-    if [ -n "${PSO_ASK_MENU+set}" ]; then
+    if [ "$PSO_ASK_MENU" != "false" ]; then
         app=$(eval "$PSO_ASK_MENU")
-        [ -n "${PSO_ASK_AUTOSAVE+set}" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
+        [ "$PSO_ASK_AUTOSAVE" != "false" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
         exec_cmd "$app %s" "$resource"
     fi
 }
@@ -79,7 +74,7 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 resource=$@
-
+echo $resource
 if [ -f "$resource" ]; then
     resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
