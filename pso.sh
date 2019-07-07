@@ -20,7 +20,7 @@ try_config(){
     while IFS=: read -r mime app; do
     if [ "$mime" = "$resource_mime" ]; then
         if [ $opened -eq 0 ] && [ $debug -eq 0 ]; then
-            "$app" "$resource"
+            exec $(printf "$app" "$resource")
             opened=1 
         fi
         [ $debug -eq 1 ] && echo "mime: $mime app: $app (from $PSO_MIME_CONFIG)"
