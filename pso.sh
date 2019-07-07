@@ -15,7 +15,7 @@ show_help(){
 }
 
 exec_cmd(){
-    exec_cmd=$(printf "$1" "$2")
+    exec_cmd=$(printf "$1" \""$2"\")
     eval $exec_cmd
     kill -s TERM $TOP_PID
 }
@@ -77,8 +77,8 @@ shift $((OPTIND-1))
 
 resource=$@
 
-echo "$resource" | grep -E "^file://"
-[ $? -eq 0 ] && handle_file_uri
+echo "$resource" | grep -E "^file://" > /dev/null
+[ $? -eq 0 ] && resource=$(echo "$resource" | sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' | xargs -0 printf "%b")
 
 if [ -f "$resource" ]; then
     resource_mime=$(file -b --mime-type "$resource")
