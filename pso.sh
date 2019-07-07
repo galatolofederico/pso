@@ -22,7 +22,9 @@ exec_cmd(){
 }
 
 try_regex(){
+    grep "^[^#]" $1 |
     while IFS=: read -r regex cmd; do
+        echo $resource $regex
         echo "$resource" | grep -E "$regex" > /dev/null
         if [ "$?" -eq 0 ]; then
             if [ "$debug" -eq 0 ]; then
@@ -30,19 +32,20 @@ try_regex(){
             fi
             [ "$debug" -eq 1 ] && echo "regex: $regex cmd: $cmd (from $1)"
         fi
-    done <"$1"
+    done
 }
 
 
 try_mime(){
+    grep "^[^#]" "$1" |
     while IFS=: read -r mime cmd; do
         if [ "$mime" = "$resource_mime" ]; then
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
             fi
-            [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $PSO_MIME_CONFIG)"
+            [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $1)"
         fi
-    done <"$PSO_MIME_CONFIG"
+    done
 }
 
 
@@ -68,7 +71,7 @@ resource_mime=$(file -b --mime-type "$resource")
 
 if [ -f "$resource" ]; then 
     try_regex "$PSO_REGEX_CONFIG"
-    #try_mime
+    try_mime "$PSO_MIME_CONFIG"
 else
     try_regex "$PSO_URI_CONFIG"
 fi
