@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONFIG_FILE="$HOME./config/pso.config"
+CONFIG_FILE="$HOME/.config/pso.config"
 
 [ -f "$CONFIG_FILE" ] && . "$CONFIG_FILE"
 
@@ -21,14 +21,27 @@ exec_cmd(){
     exec $exec_cmd
 }
 
-try_config(){
-    while IFS=: read -r mime cmd; do
-    if [ "$mime" = "$resource_mime" ]; then
-        if [ "$debug" -eq 0 ]; then
-            exec_cmd "$cmd" "$resource"
+try_regex(){
+    while IFS=: read -r regex cmd; do
+        echo "$resource" | grep -E "$regex" > /dev/null
+        if [ "$?" -eq 0 ]; then
+            if [ "$debug" -eq 0 ]; then
+                exec_cmd "$cmd" "$resource"
+            fi
+            [ "$debug" -eq 1 ] && echo "regex: $regex cmd: $cmd (from $1)"
         fi
-        [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $PSO_MIME_CONFIG)"
-    fi
+    done <"$1"
+}
+
+
+try_mime(){
+    while IFS=: read -r mime cmd; do
+        if [ "$mime" = "$resource_mime" ]; then
+            if [ "$debug" -eq 0 ]; then
+                exec_cmd "$cmd" "$resource"
+            fi
+            [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $PSO_MIME_CONFIG)"
+        fi
     done <"$PSO_MIME_CONFIG"
 }
 
@@ -53,6 +66,9 @@ shift $((OPTIND-1))
 resource=$@
 resource_mime=$(file -b --mime-type "$resource")
 
-try_config
-
-#echo $resource_mime
+if [ -f "$resource" ]; then 
+    try_regex "$PSO_REGEX_CONFIG"
+    #try_mime
+else
+    try_regex "$PSO_URI_CONFIG"
+fi
