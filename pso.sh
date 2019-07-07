@@ -1,5 +1,8 @@
 #!/bin/sh
 
+trap "exit 0" TERM
+export TOP_PID=$$
+
 CONFIG_FILE="$HOME/.config/pso.config"
 
 [ -f "$CONFIG_FILE" ] && . "$CONFIG_FILE"
@@ -18,7 +21,8 @@ show_help(){
 
 exec_cmd(){
     exec_cmd=$(printf "$cmd" "$resource")
-    exec $exec_cmd
+    eval $exec_cmd
+    kill -s TERM $TOP_PID
 }
 
 try_regex(){
@@ -48,6 +52,15 @@ try_mime(){
 }
 
 
+ask(){
+    if [ -n "${PSO_ASK_MENU+set}" ]; then
+        app=$(eval "$PSO_ASK_MENU")
+        [ -n "${PSO_ASK_AUTOSAVE+set}" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
+        exec_cmd "$app %s" "$resource"
+    fi
+}
+
+
 OPTIND=1
 
 debug=0
@@ -71,6 +84,8 @@ if [ -f "$resource" ]; then
     resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
     try_mime "$PSO_MIME_CONFIG"
+    ask
 else
     try_regex "$PSO_URI_CONFIG"
+    notify-send "Cant open the URI, configure a regex in $PSO_URI_CONFIG"
 fi
