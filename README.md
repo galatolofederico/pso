@@ -1,3 +1,5 @@
+### The project is still under development please do not use it (yet)
+
 # PSO: Pretty Straightforward Opener
 
 `xdg-open` is bloated.
