@@ -7,7 +7,7 @@ export TOP_PID=$$
 . "$PSO_CONFIG_FILE"
 
 show_help(){
-    echo "Pretty Straightforward file Opener"
+    echo "Pretty Straightforward Opener"
     echo "Usage ./pso.sh [-h] [-d] file|uri"
     echo "-h : Show this help"
     echo "-d : Run in debug mode (dry run)"
