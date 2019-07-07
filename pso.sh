@@ -50,8 +50,10 @@ try_mime(){
 ask(){
     if [ "$PSO_ASK_MENU" != "false" ]; then
         app=$(eval "$PSO_ASK_MENU")
-        [ "$PSO_ASK_AUTOSAVE" != "false" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
-        exec_cmd "$app %s" "$resource"
+        if [ "$app" != "" ]; then
+            [ "$PSO_ASK_AUTOSAVE" != "false" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
+            exec_cmd "$app %s" "$resource"
+        fi
     fi
 }
 
@@ -74,7 +76,10 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 resource=$@
-echo $resource
+
+echo "$resource" | grep -E "^file://"
+[ $? -eq 0 ] && handle_file_uri
+
 if [ -f "$resource" ]; then
     resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
