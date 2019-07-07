@@ -15,6 +15,20 @@ show_help(){
     echo "-d : Run in debug mode (dry run)"
 }
 
+
+try_config(){
+    while IFS=: read -r mime app; do
+    if [ "$mime" = "$resource_mime" ]; then
+        if [ $opened -eq 0 ] && [ $debug -eq 0 ]; then
+            "$app" "$resource"
+            opened=1 
+        fi
+        [ $debug -eq 1 ] && echo "mime: $mime app: $app (from $PSO_MIME_CONFIG)"
+    fi
+    done <"$PSO_MIME_CONFIG"
+}
+
+
 OPTIND=1
 
 debug=0
@@ -36,15 +50,7 @@ resource=$@
 resource_mime=$(file -b --mime-type "$resource")
 
 opened=0
-while read -r mime app; do
-  if [ "$mime" = "$resource_mime" ]; then
-    if [ $opened -eq 0 ] && [ $debug -eq 0 ]; then
-        "$app" "$resource"
-        opened=1 
-    fi
-    [ $debug -eq 1 ] && echo "mime: $mime app: $app (from $PSO_MIME_CONFIG)"
-  fi
-done <"$PSO_MIME_CONFIG"
 
+try_config
 
 #echo $resource_mime
