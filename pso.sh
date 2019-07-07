@@ -23,8 +23,7 @@ exec_cmd(){
 
 try_regex(){
     grep "^[^#]" $1 |
-    while IFS=: read -r regex cmd; do
-        echo $resource $regex
+    while IFS=: read -r cmd regex; do
         echo "$resource" | grep -E "$regex" > /dev/null
         if [ "$?" -eq 0 ]; then
             if [ "$debug" -eq 0 ]; then
@@ -38,7 +37,7 @@ try_regex(){
 
 try_mime(){
     grep "^[^#]" "$1" |
-    while IFS=: read -r mime cmd; do
+    while IFS=: read -r cmd mime; do
         if [ "$mime" = "$resource_mime" ]; then
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
@@ -67,9 +66,9 @@ shift $((OPTIND-1))
 [ "${1:-}" = "--" ] && shift
 
 resource=$@
-resource_mime=$(file -b --mime-type "$resource")
 
-if [ -f "$resource" ]; then 
+if [ -f "$resource" ]; then
+    resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
     try_mime "$PSO_MIME_CONFIG"
 else
