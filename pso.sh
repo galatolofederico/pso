@@ -1,5 +1,8 @@
 #!/bin/sh
 
+CONFIG_FILE="$HOME./config/pso.config"
+
+[ -f "$CONFIG_FILE" ] && . "$CONFIG_FILE"
 
 [ -z "$PSO_REGEX_CONFIG" ] && PSO_REGEX_CONFIG="$HOME/.config/pso.regex.config"
 [ -z "$PSO_MIME_CONFIG" ] && PSO_MIME_CONFIG="$HOME/.config/pso.mime.config"
@@ -15,18 +18,18 @@ show_help(){
 }
 
 exec_cmd(){
-    cmd=$(printf "$app" "$resource")
-    exec $cmd
+    exec_cmd=$(printf "$cmd" "$resource")
+    exec $exec_cmd
     opened=1 
 }
 
 try_config(){
-    while IFS=: read -r mime app; do
+    while IFS=: read -r mime cmd; do
     if [ "$mime" = "$resource_mime" ]; then
         if [ "$opened" -eq 0 ] && [ "$debug" -eq 0 ]; then
-            exec_cmd "$app" "$resource"
+            exec_cmd "$cmd" "$resource"
         fi
-        [ "$debug" -eq 1 ] && echo "mime: $mime app: $app (from $PSO_MIME_CONFIG)"
+        [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $PSO_MIME_CONFIG)"
     fi
     done <"$PSO_MIME_CONFIG"
 }
