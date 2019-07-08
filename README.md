@@ -1,5 +1,3 @@
-### The project is still under development please do not use it (yet)
-
 # PSO: Pretty Straightforward Opener
 
 `xdg-open` is bloated.
@@ -16,9 +14,10 @@ It supports regular expressions, URIs and mime types. It can be easily configure
 
 ## Installation
 
-Clone this repository
+Clone this repository somewhere (in this example we will use `$HOME/.local/opt` )
 
 ```
+mkdir -p $HOME/.local/opt && cd $HOME/.local/opt
 git clone https://github.com/galatolofederico/pso.git && cd pso
 ```
 
@@ -28,13 +27,17 @@ Copy the configuration files
 cp -r config.def/* ~/.config
 ```
 
-Create a symbolic link named xdg-open
+Create a symbolic link named `xdg-open`
 
 ```
 ln -s pso xdg-open
 ```
 
-Add this folder to your `$PATH` as **first element**
+Add the folder to the `$PATH` of your X instance as **first element** (in order to override `xdg-open`). For example if you are using `.xinitrc` you have to add
+
+```
+export PATH=$HOME/.local/opt/pso:$PATH
+```
 
 
 ## Configuration
@@ -96,3 +99,8 @@ The regular expressions are evaluated using `grep -E` extended regular expressio
 
 
 **pretty straightforward, isn't it?**
+
+
+## License
+
+This code is released under an open source license (in this case `GPLv3`) as all code should be. Feel free to do [whatever you want](https://choosealicense.com/licenses/gpl-3.0/) with the code 
