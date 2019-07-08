@@ -47,7 +47,7 @@ try_mime(){
 
 
 ask(){
-    if [ "$PSO_ASK_MENU" != "false" ]; then
+    if [ "$PSO_ASK_MENU" != "false" ] && [ "$debug" -eq 0 ]; then
         app=$(eval "$PSO_ASK_MENU")
         if [ "$app" != "" ]; then
             [ "$PSO_ASK_AUTOSAVE" != "false" ] && printf "$app %%s:$resource_mime\n" >> $PSO_MIME_CONFIG
