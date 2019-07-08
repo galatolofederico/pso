@@ -48,9 +48,13 @@ It defines:
 | PSO_REGEX_CONFIG | Location of the `files regular expression association rules` file |
 | PSO_MIME_CONFIG | Location of the `mime types association rules` file |
 | PSO_URI_CONFIG | Location of the `URIs regular expression association rules` file |
-| PSO_ASK_MENU | Command for the application choosing menu | 
-| PSO_ASK_AUTOSAVE | Should pso save mime type associations when chosen? | 
+| PSO_ASK_MENU | Command for the application chooser menu (or "false" for disabling it) | 
+| PSO_ASK_AUTOSAVE | Should pso save mime type associations when chosen? (true/false) | 
+| PSO_LOG | Location of the log file (or "false" for disabling it) |  
 
+you can check out the default values [here](https://github.com/galatolofederico/pso/blob/master/config.def/pso.config)
+
+## Rules
 
 `pso` behaves in this way:
 
@@ -60,8 +64,6 @@ It defines:
 * If it have to handle a **URI**:
     * Check the URI against the `URIs regular expression association rules`
 
-
-## Rules
 
 Each rule is in the form:
 
@@ -87,5 +89,10 @@ Or even if you want to copy to your clipboard the `magnet:` links you have to ad
 echo "%s" | xclip -selection clipboard:magnet:(.+)
 ```
 to the `$PSO_URI_CONFIG` file.
+
+The `parametric_command` are evaluated using `GNU printf`
+
+The regular expressions are evaluated using `grep -E` extended regular expressions engine.
+
 
 **pretty straightforward, isn't it?**
