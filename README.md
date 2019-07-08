@@ -103,4 +103,4 @@ The regular expressions are evaluated using `grep -E` extended regular expressio
 
 ## License
 
-This code is released under an open source license (in this case `GPLv3`) as all code should be. Feel free to do [whatever you want](https://choosealicense.com/licenses/gpl-3.0/) with the code 
+This code is released under an open source license (in this case `GPLv3`) as all the code should be. Feel free to do [whatever you want](https://choosealicense.com/licenses/gpl-3.0/) with it :D 
