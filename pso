@@ -57,10 +57,8 @@ ask(){
 }
 
 
-OPTIND=1
-
 debug=0
-while getopts "hd?:" opt; do
+while getopts ":hd" opt; do
     case "$opt" in
     h|\?)
         show_help
@@ -72,7 +70,6 @@ while getopts "hd?:" opt; do
 done
 
 shift $((OPTIND-1))
-[ "${1:-}" = "--" ] && shift
 
 resource=$*
 
@@ -81,6 +78,7 @@ if [ -z "$resource" ]; then
     exit 0
 fi
 
+[ "$debug" -eq 1 ] && echo "Resource: $resource"
 [ "$PSO_LOG" != "false" ] && echo "[ "$(date)" ] : $resource" >> $PSO_LOG
 
 echo "$resource" | grep -E "^file://" > /dev/null
