@@ -84,7 +84,9 @@ fi
 echo "$resource" | grep -E "^file://" > /dev/null
 [ $? -eq 0 ] && resource=$(echo "$resource" | sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' | xargs -0 printf "%b")
 
-if [ -f "$resource" ]; then
+if [ -d "$resource" ]; then
+    exec_cmd "$PSO_FOLDER_CMD" "$resource"
+elif [ -f "$resource" ]; then
     resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
     try_mime "$PSO_MIME_CONFIG"
