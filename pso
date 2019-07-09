@@ -56,6 +56,12 @@ ask(){
     fi
 }
 
+display_error(){
+    if [ "$debug" -eq 0 ]; then
+        notify-send "$1"
+    fi
+}
+
 
 debug=0
 while getopts ":hd" opt; do
@@ -93,5 +99,5 @@ elif [ -f "$resource" ]; then
     ask
 else
     try_regex "$PSO_URI_CONFIG"
-    notify-send "Cant open the URI, configure a regex in $PSO_URI_CONFIG"
+    display_error "Cant open the URI, configure a regex in $PSO_URI_CONFIG"
 fi
