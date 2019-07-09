@@ -14,7 +14,7 @@ It supports regular expressions, URIs and mime types. It can be easily configure
 
 ## Installation
 
-Clone this repository somewhere (in this example we will use `$HOME/.local/opt` )
+Clone this repository somewhere (in this example `$HOME/.local/opt` )
 
 ```
 mkdir -p $HOME/.local/opt && cd $HOME/.local/opt
@@ -51,6 +51,7 @@ It defines:
 | PSO_REGEX_CONFIG | Location of the `files regular expression association rules` file |
 | PSO_MIME_CONFIG | Location of the `mime types association rules` file |
 | PSO_URI_CONFIG | Location of the `URIs regular expression association rules` file |
+| PSO_FOLDER_CMD | Command for opening the folders |
 | PSO_ASK_MENU | Command for the application chooser menu (or "false" for disabling it) | 
 | PSO_ASK_AUTOSAVE | Should pso save mime type associations when chosen? (true/false) | 
 | PSO_LOG | Location of the log file (or "false" for disabling it) |  
@@ -61,6 +62,8 @@ you can check out the default values [here](https://github.com/galatolofederico/
 
 `pso` behaves in this way:
 
+* IF it have to handle a **folder**
+    * Use the command specified in `PSO_FOLDER_CMD`
 * If it have to handle a **file**:
     * Check the file name against the `files regular expression association rules` 
     * Check the mime type against the `mime types association rules`
@@ -74,24 +77,31 @@ Each rule is in the form:
 parametric_command:rule
 ```
 
-For example if you want to open all your `pdf` with `zathura` you have to add
+## Examples
+
+If you want to open all your `pdf` with `zathura` you have to add
 ```
 zathura %s:application/pdf
 ```
 to the `$PSO_MIME_CONFIG` file.
 
 
-Or if you want to open all your `.log` files with `st -e vim` you have to add
+If you want to open all your `.log` files with `st -e vim` you have to add
 ```
 st -e "vim %s":*\.log$
 ```
 to the `$PSO_REGEX_CONFIG` file
 
-Or even if you want to copy to your clipboard the `magnet:` links you have to add
+If you want to copy to your clipboard the `magnet:` links you have to add
 ```
 echo "%s" | xclip -selection clipboard:magnet:(.+)
 ```
 to the `$PSO_URI_CONFIG` file.
+
+If you want to open your folders with `set -e ranger` you have to set `$PSO_FOLDER_CMD` as:
+```
+PSO_FOLDER_CMD="st -e ranger %s"
+```
 
 The `parametric_command` are evaluated using `GNU printf`
 
