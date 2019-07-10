@@ -22,12 +22,14 @@ exec_cmd(){
 try_regex(){
     config=$(grep "^[^#]" "$1")
     while IFS=: read -r cmd regex; do
-        echo "$resource" | grep -E "$regex" > /dev/null
-        if [ "$?" -eq 0 ]; then
-            if [ "$debug" -eq 0 ]; then
-                exec_cmd "$cmd" "$resource"
+        if [ "$regex" != "" ]; then
+            echo "$resource" | grep -E "$regex" > /dev/null
+            if [ "$?" -eq 0 ]; then
+                if [ "$debug" -eq 0 ]; then
+                    exec_cmd "$cmd" "$resource"
+                fi
+                [ "$debug" -eq 1 ] && echo "[*] regex: $regex cmd: $cmd (from $1)"
             fi
-            [ "$debug" -eq 1 ] && echo "regex: $regex cmd: $cmd (from $1)"
         fi
     done <<EOF
 $config
@@ -42,7 +44,7 @@ try_mime(){
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
             fi
-            [ "$debug" -eq 1 ] && echo "mime: $mime cmd: $cmd (from $1)"
+            [ "$debug" -eq 1 ] && echo "[*] mime: $mime cmd: $cmd (from $1)"
         fi
     done <<EOF
 $config
@@ -88,8 +90,8 @@ if [ -z "$resource" ]; then
     exit 0
 fi
 
-[ "$debug" -eq 1 ] && echo "Resource: $resource"
-[ "$PSO_LOG" != "false" ] && echo "[ "$(date)" ] : $resource" >> $PSO_LOG
+[ "$debug" -eq 1 ] && printf "[*] Resource: %s\n[!] Be aware that only the first match will be executed\n" "$resource"
+[ "$PSO_LOG" != "false" ] && echo "[ $(date) ] : $resource" >> "$PSO_LOG"
 
 echo "$resource" | grep -E "^file://" > /dev/null
 [ $? -eq 0 ] && resource=$(echo "$resource" | sed 's#^file://##;s/+/ /g;s/%\(..\)/\\x\1/g;' | xargs -0 printf "%b")
