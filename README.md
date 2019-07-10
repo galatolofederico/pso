@@ -8,7 +8,9 @@ It is hard to configure, easy to mess up and its configuration is not portable.
 
 `pso` have **no dependencies** other than the GNU Operating System.
 
-It supports regular expressions, URIs and mime types. It can be easily configured by hand and it is capable autoconfigure itself while using it.
+It supports regular expressions, URIs and mime types. 
+
+It can be easily configured by hand and it is capable **autoconfigure itself** while **using it**.
 
 `pso` is a ~100 lines self explanatory script that can be collocated in the *suckless spectrum*
 
