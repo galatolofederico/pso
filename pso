@@ -26,6 +26,7 @@ try_regex(){
         if [ "$?" -eq 0 ]; then
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
+                break
             fi
             [ "$debug" -eq 1 ] && echo "regex: $regex cmd: $cmd (from $1)"
         fi
