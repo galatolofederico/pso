@@ -61,7 +61,11 @@ ask(){
 
 display_error(){
     if [ "$debug" -eq 0 ]; then
-        notify-send "$1"
+        if tty -s; then
+            echo "$1"
+        else
+            notify-send "$1"
+        fi
     fi
 }
 
@@ -102,5 +106,10 @@ elif [ -f "$resource" ]; then
     ask
 else
     try_regex "$PSO_URI_CONFIG"
-    display_error "Cant open the URI, configure a regex in $PSO_URI_CONFIG"
 fi
+
+display_error "Cant open the resource '$resource', you can configure pso here:
+General Configuration: $PSO_CONFIG_FILE
+(files) MIME Types rules: $PSO_MIME_CONFIG
+(files) REGEX rules: $PSO_REGEX_CONFIG
+(uris)  REGEX rules: $PSO_URI_CONFIG"
