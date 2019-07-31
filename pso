@@ -37,7 +37,7 @@ EOF
 try_mime(){
     config=$(grep "^[^#]" "$1")
     while IFS=: read -r cmd mime; do
-        if [ "$mime" = "$resource_mime" ]; then
+        if echo "$resource_mime" | grep -E "^$mime\$" > /dev/null ; then
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
             fi
