@@ -41,7 +41,7 @@ try_mime(){
             if [ "$debug" -eq 0 ]; then
                 exec_cmd "$cmd" "$resource"
             fi
-            [ "$debug" -eq 1 ] && echo "[*] mime: $mime cmd: $cmd (from $1)"
+            [ "$debug" -eq 1 ] && echo "[*] cmd: $cmd (from $1)"
         fi
     done <<EOF
 $config
@@ -100,8 +100,9 @@ echo "$resource" | grep -E "^file://" > /dev/null
 if [ -d "$resource" ]; then
     exec_cmd "$PSO_FOLDER_CMD" "$resource"
 elif [ -f "$resource" ]; then
-    resource_mime=$(file -b --mime-type "$resource")
     try_regex "$PSO_REGEX_CONFIG"
+    resource_mime=$(file -b --mime-type "$resource")
+    [ "$debug" -eq 1 ] && echo "[*] mime: $resource_mime"
     try_mime "$PSO_MIME_CONFIG"
     ask
 else
