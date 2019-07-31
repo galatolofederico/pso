@@ -51,7 +51,7 @@ It defines:
 | Variable   | Meaning |
 |:----------:|:-------------:|
 | PSO_REGEX_CONFIG | Location of the `files regular expression association rules` file |
-| PSO_MIME_CONFIG | Location of the `mime types association rules` file |
+| PSO_MIME_CONFIG | Location of the `mime types regular expression association rules` file |
 | PSO_URI_CONFIG | Location of the `URIs regular expression association rules` file |
 | PSO_FOLDER_CMD | Command for opening the folders |
 | PSO_ASK_MENU | Command for the application chooser menu (or "false" for disabling it) | 
@@ -68,7 +68,7 @@ you can check out the default values [here](https://github.com/galatolofederico/
     * Use the command specified in `PSO_FOLDER_CMD`
 * If it have to handle a **file**:
     * Check the file name against the `files regular expression association rules` 
-    * Check the mime type against the `mime types association rules`
+    * Check the mime type against the `mime types regular expression association rules`
 * If it have to handle a **URI**:
     * Check the URI against the `URIs regular expression association rules`
 
@@ -86,6 +86,11 @@ If you want to open all your `pdf` with `zathura` you have to add
 zathura %s:application/pdf
 ```
 to the `$PSO_MIME_CONFIG` file.
+
+Or if you want to open all your `text/` files with `st -e vim` you have to add
+```
+st -e "vim %s":text/.*
+```
 
 
 If you want to open all your `.log` files with `st -e vim` you have to add
